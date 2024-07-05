@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from 'react';
-import { generateDiff } from './generator';
+import { DiffReportType, generateDiff } from './generator';
 import { extractTextFromFiles } from './extractor';
 import { Change } from 'diff';
 
@@ -11,7 +11,7 @@ interface IMainAppContext {
   areFilesSelected: boolean;
   texts?: string[];
   diffReport?: Change[];
-  generateDiffReport: () => void;
+  generateDiffReport: (type: DiffReportType) => void;
 }
 
 const MainAppContext = createContext<IMainAppContext>({
@@ -41,12 +41,12 @@ export const MainAppContextProvider = (props: { children: React.ReactNode }) => 
     }
   }, [file2]);
 
-  const generateDiffReport = async () => {
+  const generateDiffReport = async (type: DiffReportType) => {
     if (areFilesSelected) {
       const texts = await extractTextFromFiles([file1, file2])
       setTexts(texts);
 
-      const diff = await generateDiff(texts[0], texts[1]);
+      const diff = await generateDiff(texts[0], texts[1], type);
       setDiffReport(diff);
     }
   }

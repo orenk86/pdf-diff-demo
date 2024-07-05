@@ -1,13 +1,10 @@
 import FileInput from './FileInput';
 import styled from 'styled-components';
 import useMainAppContext from './MainAppContext';
+import Row from './Row';
 
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 1rem;
+const Wrapper = styled(Row)`
+  margin-top: 2rem;
 `;
 
 const InputsContainer = () => {
