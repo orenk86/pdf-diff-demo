@@ -9,25 +9,28 @@ interface IMainAppContext {
   setFile1: (file: File) => void;
   setFile2: (file: File) => void;
   areFilesSelected: boolean;
+  reportType: DiffReportType;
+  setReportType: (type: DiffReportType) => void;
   texts?: string[];
   diffReport?: Change[];
-  generateDiffReport: (type: DiffReportType) => void;
   similarity?: number;
 }
 
 const MainAppContext = createContext<IMainAppContext>({
   setFile1: () => {},
   setFile2: () => {},
+  reportType: DiffReportType.ByWord,
+  setReportType: () => {},
   areFilesSelected: false,
-  generateDiffReport: () => {},
 })
 
 export const MainAppContextProvider = (props: { children: React.ReactNode }) => {
-  const [file1, setFile1] = useState<File | undefined>();
-  const [file2, setFile2] = useState<File | undefined>();
-  const [texts, setTexts] = useState<string[] | undefined>([]);
-  const [diffReport, setDiffReport] = useState<Change[] | undefined>([]);
-  const [similarity, setSimilarity] = useState<number | undefined>();
+  const [file1, setFile1] = useState<File | undefined>()
+  const [file2, setFile2] = useState<File | undefined>()
+  const [reportType, setReportType] = useState<DiffReportType>(DiffReportType.ByWord)
+  const [texts, setTexts] = useState<string[] | undefined>([])
+  const [diffReport, setDiffReport] = useState<Change[] | undefined>([])
+  const [similarity, setSimilarity] = useState<number | undefined>()
 
   const areFilesSelected = !!file1 && !!file2;
 
@@ -56,15 +59,23 @@ export const MainAppContextProvider = (props: { children: React.ReactNode }) => 
     }
   }
 
+  useEffect(() => {
+    generateDiffReport(reportType)
+      .then(() => {
+        console.log('Diff report generated')
+      });
+  }, [file1, file2, reportType]);
+
   const value: IMainAppContext = {
     file1,
     file2,
     setFile1,
     setFile2,
     areFilesSelected,
+    reportType,
+    setReportType,
     texts,
     diffReport,
-    generateDiffReport,
     similarity,
   }
 
