@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 import { MainAppContextProvider } from './MainAppContext';
 import InputsContainer from './InputsContainer';
-import GenerateReportButtons from './GenerateReportButtons';
+import GenerateReportMenu from './GenerateReportMenu';
 import ReportContainer from './ReportContainer';
 
 function App() {
@@ -10,7 +10,7 @@ function App() {
     <div className="App">
       <MainAppContextProvider>
         <InputsContainer />
-        <GenerateReportButtons />
+        <GenerateReportMenu />
         <ReportContainer />
       </MainAppContextProvider>
     </div>

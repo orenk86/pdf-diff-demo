@@ -1,5 +1,6 @@
 import * as diff from 'diff'
 import { Change } from 'diff';
+import { stringSimilarity } from 'string-similarity-js'
 
 export enum DiffReportType {
     ByWord,
@@ -28,4 +29,8 @@ async function generateDiffByWord(str1: string, str2: string): Promise<Change[]>
 
 async function generateDiffBySentence(str1: string, str2: string): Promise<Change[]> {
     return diff.diffSentences(str1, str2)
+}
+
+export async function calculateSimilarity(str1: string, str2: string): Promise<number> {
+    return stringSimilarity(str1, str2)
 }

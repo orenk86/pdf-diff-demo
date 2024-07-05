@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from 'react';
-import { DiffReportType, generateDiff } from './generator';
+import { calculateSimilarity, DiffReportType, generateDiff } from './generator';
 import { extractTextFromFiles } from './extractor';
 import { Change } from 'diff';
 
@@ -12,6 +12,7 @@ interface IMainAppContext {
   texts?: string[];
   diffReport?: Change[];
   generateDiffReport: (type: DiffReportType) => void;
+  similarity?: number;
 }
 
 const MainAppContext = createContext<IMainAppContext>({
@@ -26,6 +27,7 @@ export const MainAppContextProvider = (props: { children: React.ReactNode }) => 
   const [file2, setFile2] = useState<File | undefined>();
   const [texts, setTexts] = useState<string[] | undefined>([]);
   const [diffReport, setDiffReport] = useState<Change[] | undefined>([]);
+  const [similarity, setSimilarity] = useState<number | undefined>();
 
   const areFilesSelected = !!file1 && !!file2;
 
@@ -48,6 +50,9 @@ export const MainAppContextProvider = (props: { children: React.ReactNode }) => 
 
       const diff = await generateDiff(texts[0], texts[1], type);
       setDiffReport(diff);
+
+      const similarity = await calculateSimilarity(texts[0], texts[1]);
+      setSimilarity(similarity);
     }
   }
 
@@ -60,6 +65,7 @@ export const MainAppContextProvider = (props: { children: React.ReactNode }) => 
     texts,
     diffReport,
     generateDiffReport,
+    similarity,
   }
 
   return (

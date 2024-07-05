@@ -2,7 +2,7 @@ import useMainAppContext from './MainAppContext';
 import { DiffReportType } from './generator';
 import Row from './Row';
 
-const GenerateReportButtons = () => {
+const GenerateReportMenu = () => {
   const { generateDiffReport, areFilesSelected } = useMainAppContext();
 
   return (
@@ -17,4 +17,4 @@ const GenerateReportButtons = () => {
   );
 }
 
-export default GenerateReportButtons;
+export default GenerateReportMenu;

@@ -26,11 +26,14 @@ const DiffViewContainer = styled.div`
 `
 
 const ReportContainer = () => {
-  const { diffReport, texts } = useMainAppContext();
+  const { diffReport, similarity = 0, texts } = useMainAppContext();
   const text1 = texts ? texts[0] : '';
   const text2 = texts ? texts[1] : '';
   return (
     <Wrapper>
+      <Row>
+        Similarity: {similarity.toFixed(2)}
+      </Row>
       <Row>
         <textarea rows={20} contentEditable={false} value={text1} onChange={() => {}}/>
         <textarea rows={20} contentEditable={false} value={text2} onChange={() => {}}/>
