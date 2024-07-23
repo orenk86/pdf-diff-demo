@@ -27,9 +27,7 @@ const DiffViewContainer = styled.div`
 `
 
 const ReportContainer = () => {
-  const { diffReport, similarity = 0, texts } = useMainAppContext()
-  const text1 = texts ? texts[0] : ''
-  const text2 = texts ? texts[1] : ''
+  const { diffReport, similarity = 0, text1, setText1, text2, setText2 } = useMainAppContext()
 
   const [showDiffView, setShowDiffView] = useState<boolean>(true)
   const [showRawDiff, setShowRawDiff] = useState<boolean>(false)
@@ -37,14 +35,26 @@ const ReportContainer = () => {
   return (
     <Wrapper>
       <Row>
-        Content of the files:
+        Content to be compared:
       </Row>
       <Row>
-        <textarea rows={20} contentEditable={false} value={text1} onChange={() => {}}/>
-        <textarea rows={20} contentEditable={false} value={text2} onChange={() => {}}/>
+        <textarea
+          rows={20}
+          contentEditable={false}
+          value={text1}
+          onChange={(e) => {
+            setText1(e.target.value)
+          }}/>
+        <textarea
+          rows={20}
+          contentEditable={false}
+          value={text2}
+          onChange={(e) => {
+            setText2(e.target.value)
+          }}/>
       </Row>
       <Row>
-        Similarity: {similarity.toFixed(2)}
+        Similarity: {similarity.toFixed(3)}
       </Row>
       <Row>
         <input type="checkbox" checked={showDiffView} onChange={() => setShowDiffView(!showDiffView)} /> Show diff view

@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useState } from 'react'
 import { calculateSimilarity, DiffReportType, generateDiff } from './generator'
-import { extractTextFromFiles } from './extractor'
+import { extractTextFromFile } from './extractor'
 import { Change } from 'diff'
 
 interface IMainAppContext {
@@ -8,10 +8,12 @@ interface IMainAppContext {
   file2?: File
   setFile1: (file: File) => void
   setFile2: (file: File) => void
-  areFilesSelected: boolean
   reportType: DiffReportType
   setReportType: (type: DiffReportType) => void
-  texts?: string[]
+  text1?: string
+  text2?: string
+  setText1: (text: string) => void
+  setText2: (text: string) => void
   diffReport?: Change[]
   similarity?: number
 }
@@ -19,42 +21,45 @@ interface IMainAppContext {
 const MainAppContext = createContext<IMainAppContext>({
   setFile1: () => {},
   setFile2: () => {},
+  setText1: () => {},
+  setText2: () => {},
   reportType: DiffReportType.ByWord,
   setReportType: () => {},
-  areFilesSelected: false,
 })
 
 export const MainAppContextProvider = (props: { children: React.ReactNode }) => {
   const [file1, setFile1] = useState<File | undefined>()
   const [file2, setFile2] = useState<File | undefined>()
   const [reportType, setReportType] = useState<DiffReportType>(DiffReportType.ByWord)
-  const [texts, setTexts] = useState<string[] | undefined>([])
+  const [text1, setText1] = useState<string | undefined>()
+  const [text2, setText2] = useState<string | undefined>()
   const [diffReport, setDiffReport] = useState<Change[] | undefined>([])
   const [similarity, setSimilarity] = useState<number | undefined>()
-
-  const areFilesSelected = !!file1 && !!file2
 
   useEffect(() => {
     if (file1) {
       console.log('file1 selected', file1.name)
+      extractTextFromFile(file1).then((text) => {
+        setText1(text)
+      })
     }
   }, [file1])
 
   useEffect(() => {
     if (file2) {
       console.log('file2 selected', file2.name)
+      extractTextFromFile(file2).then((text) => {
+        setText2(text)
+      })
     }
   }, [file2])
 
   const generateDiffReport = async (type: DiffReportType) => {
-    if (areFilesSelected) {
-      const texts = await extractTextFromFiles([file1, file2])
-      setTexts(texts)
-
-      const diff = await generateDiff(texts[0], texts[1], type)
+    if (text1 !== undefined && text2 !== undefined) {
+      const diff = await generateDiff(text1, text2, type)
       setDiffReport(diff)
 
-      const similarity = await calculateSimilarity(texts[0], texts[1])
+      const similarity = await calculateSimilarity(text1, text2)
       setSimilarity(similarity)
     }
   }
@@ -64,17 +69,19 @@ export const MainAppContextProvider = (props: { children: React.ReactNode }) => 
       .then(() => {
         console.log('Diff report generated')
       })
-  }, [file1, file2, reportType])
+  }, [text1, text2, reportType]);
 
   const value: IMainAppContext = {
     file1,
     file2,
     setFile1,
     setFile2,
-    areFilesSelected,
     reportType,
     setReportType,
-    texts,
+    text1,
+    text2,
+    setText1,
+    setText2,
     diffReport,
     similarity,
   }
