@@ -31,8 +31,8 @@ export const MainAppContextProvider = (props: { children: React.ReactNode }) => 
   const [file1, setFile1] = useState<File | undefined>()
   const [file2, setFile2] = useState<File | undefined>()
   const [reportType, setReportType] = useState<DiffReportType>(DiffReportType.ByWord)
-  const [text1, setText1] = useState<string | undefined>()
-  const [text2, setText2] = useState<string | undefined>()
+  const [text1, setText1] = useState('')
+  const [text2, setText2] = useState('')
   const [diffReport, setDiffReport] = useState<Change[] | undefined>([])
   const [similarity, setSimilarity] = useState<number | undefined>()
 
